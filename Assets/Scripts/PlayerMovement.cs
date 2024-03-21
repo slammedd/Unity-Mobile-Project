@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
     public Material fullHeartMat;
     public Material emptyHeartMat;
     public AudioClip damageClip;
+    public TextMeshProUGUI coinsText;
+    public int coins;
 
 
     // Start is called before the first frame update
@@ -61,6 +64,8 @@ public class PlayerMovement : MonoBehaviour
         {
             DamagePlayer(1);
         }
+
+        coinsText.text = coins.ToString();
     }
 
     private void FixedUpdate()
@@ -103,16 +108,13 @@ public class PlayerMovement : MonoBehaviour
             hearts[0].GetComponent<MeshRenderer>().material = fullHeartMat;
         }
 
-        else if(hp == 0)
+        else if(hp <= 0)
         {
             hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
             hearts[1].GetComponent<MeshRenderer>().material = emptyHeartMat;
             hearts[0].GetComponent<MeshRenderer>().material = emptyHeartMat;
             hearts[0].GetComponent<Animator>().SetTrigger("Spin");
-        }
 
-        if(hp <= 0)
-        {
             canMove = false;
             animator.SetBool("Dead", true);
         }
