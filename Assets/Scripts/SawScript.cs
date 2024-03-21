@@ -39,7 +39,7 @@ public class SawScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerMovement>().KillPlayer();
+            other.GetComponent<PlayerMovement>().DamagePlayer(2);
         }
     }
 }

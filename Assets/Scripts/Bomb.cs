@@ -11,7 +11,7 @@ public class Bomb : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Instantiate(explosionParticleSystem, transform.position, Quaternion.identity);
-            other.GetComponent<PlayerMovement>().KillPlayer();
+            other.GetComponent<PlayerMovement>().DamagePlayer(1);
             Destroy(gameObject);
         }
     }

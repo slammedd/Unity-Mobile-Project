@@ -10,12 +10,17 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     private bool canMove = true;
     private AudioSource source;
+    private int hp;
 
     public float autoMoveSpeed;
     public float jumpForce;
     public LayerMask ground;
     public Transform groundPoint;
     public AudioClip jumpClip;
+    public GameObject[] hearts;
+    public Material fullHeartMat;
+    public Material emptyHeartMat;
+    public AudioClip damageClip;
 
 
     // Start is called before the first frame update
@@ -24,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         source = GetComponent<AudioSource>();
+        hp = hearts.Length;
     }
 
     // Update is called once per frame
@@ -50,6 +56,11 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetBool("Moving", true);
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            DamagePlayer(1);
+        }
     }
 
     private void FixedUpdate()
@@ -70,9 +81,40 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void KillPlayer()
+    public void DamagePlayer(int damage)
     {
-        canMove = false;
-        animator.SetBool("Dead", true);
+        hp -= damage;
+        source.PlayOneShot(damageClip);
+        animator.SetTrigger("Damage");
+        
+        if(hp == 2)
+        {
+            hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
+            hearts[2].GetComponent<Animator>().SetTrigger("Spin");
+            hearts[1].GetComponent<MeshRenderer>().material = fullHeartMat;
+            hearts[0].GetComponent<MeshRenderer>().material = fullHeartMat;
+        }
+
+        else if(hp == 1)
+        {
+            hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
+            hearts[1].GetComponent<MeshRenderer>().material = emptyHeartMat;
+            hearts[1].GetComponent<Animator>().SetTrigger("Spin");
+            hearts[0].GetComponent<MeshRenderer>().material = fullHeartMat;
+        }
+
+        else if(hp == 0)
+        {
+            hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
+            hearts[1].GetComponent<MeshRenderer>().material = emptyHeartMat;
+            hearts[0].GetComponent<MeshRenderer>().material = emptyHeartMat;
+            hearts[0].GetComponent<Animator>().SetTrigger("Spin");
+        }
+
+        if(hp <= 0)
+        {
+            canMove = false;
+            animator.SetBool("Dead", true);
+        }
     }
 }
