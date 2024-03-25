@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     private bool grounded;
     private bool jumped;
     private Animator animator;
-    private bool canMove = true;
     private AudioSource source;
     private int hp;
 
@@ -24,7 +23,8 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip damageClip;
     public TextMeshProUGUI coinsText;
     public int coins;
-
+    public AudioClip healClip;
+    public bool canMove = true;
 
     // Start is called before the first frame update
     void Start()
@@ -79,11 +79,21 @@ public class PlayerMovement : MonoBehaviour
         //apply jump force and trigger animation
         if (jumped)
         {
-            jumped = false;
-            animator.SetTrigger("Jumped");
-            source.PlayOneShot(jumpClip);
-            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            Jump(jumpForce);
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            DamagePlayer(1);
+        }
+    }
+
+    public void Jump(float force)
+    {
+        jumped = false;
+        animator.SetTrigger("Jumped");
+        source.PlayOneShot(jumpClip);
+        rb.AddForce(transform.up * force, ForceMode.Impulse);
     }
 
     public void DamagePlayer(int damage)
@@ -117,6 +127,24 @@ public class PlayerMovement : MonoBehaviour
 
             canMove = false;
             animator.SetBool("Dead", true);
+        }
+    }
+
+    public void HealPlayer(int heal)
+    {
+        hp += heal;
+        source.PlayOneShot(healClip);
+
+        if(hp == 2)
+        {
+            hearts[1].GetComponent<MeshRenderer>().material = fullHeartMat;
+            hearts[1].GetComponent<Animator>().SetTrigger("Spin");
+        }
+
+        if (hp == 3)
+        {
+            hearts[2].GetComponent<MeshRenderer>().material = fullHeartMat;
+            hearts[2].GetComponent<Animator>().SetTrigger("Spin");
         }
     }
 }
