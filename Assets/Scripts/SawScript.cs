@@ -9,6 +9,7 @@ public class SawScript : MonoBehaviour
 
     private Vector3 startPoint;
     private Vector3 target;
+    private bool canDamage = true;
 
     private void Start()
     {
@@ -37,9 +38,17 @@ public class SawScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && canDamage)
         {
+            canDamage = false;
             other.GetComponent<PlayerMovement>().DamagePlayer(2);
+            StartCoroutine(ResetDamage());
         }
+    }
+
+    IEnumerator ResetDamage()
+    {
+        yield return new WaitForSeconds(2);
+        canDamage = true;
     }
 }

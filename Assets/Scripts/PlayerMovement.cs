@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     private AudioSource source;
     private int hp;
+    private TextMeshProUGUI coinsText;
 
     public float autoMoveSpeed;
     public float jumpForce;
@@ -21,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     public Material fullHeartMat;
     public Material emptyHeartMat;
     public AudioClip damageClip;
-    public TextMeshProUGUI coinsText;
     public int coins;
     public AudioClip healClip;
     public bool canMove = true;
@@ -33,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         source = GetComponent<AudioSource>();
         hp = hearts.Length;
+        DontDestroyOnLoad(gameObject);
+        AssignCoinText();
     }
 
     // Update is called once per frame
@@ -146,5 +148,10 @@ public class PlayerMovement : MonoBehaviour
             hearts[2].GetComponent<MeshRenderer>().material = fullHeartMat;
             hearts[2].GetComponent<Animator>().SetTrigger("Spin");
         }
+    }
+
+    public void AssignCoinText()
+    {
+        coinsText = GameObject.Find("Coins Text").GetComponent<TextMeshProUGUI>();
     }
 }
