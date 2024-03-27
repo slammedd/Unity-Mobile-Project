@@ -8,17 +8,23 @@ public class Boss : MonoBehaviour
     public GameObject missile;
     public float shotInterval;
     public int health = 3;
+    public AudioClip bossMusic;
 
     private PlayerMovement player;
     private Animator animator;
     private bool canShoot = true;
+    private GameOverMenuController gameOverMenuController;
 
     private void Start()
     {
         player = FindObjectOfType<PlayerMovement>();
         transform.parent = player.transform;
         animator = GetComponent<Animator>();
+        gameOverMenuController = FindObjectOfType<GameOverMenuController>();
 
+        player.musicSource.clip = bossMusic;
+        player.musicSource.Play();
+        transform.localPosition = new Vector3(31, -9.15f, 65);
         InvokeRepeating("ShootMissile", 3, shotInterval);
     }
 
@@ -40,6 +46,8 @@ public class Boss : MonoBehaviour
         {
             canShoot = false;
             animator.SetTrigger("Dead");
+            player.animator.SetTrigger("Wave");
+            gameOverMenuController.PlayerWon();
         }
     }
 

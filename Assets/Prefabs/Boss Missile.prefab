@@ -128,6 +128,7 @@ MonoBehaviour:
     type: 3}
   moveSpeed: 25
   missileLifetime: 8
+  spinClip: {fileID: 8300000, guid: dfe1b01fbee53204794cc4aeecdbb142, type: 3}
 --- !u!82 &5421387596143940799
 AudioSource:
   m_ObjectHideFlags: 0

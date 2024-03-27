@@ -6,8 +6,8 @@ public class BossPlatforms : MonoBehaviour
 {
     public GameObject[] platforms;
     public int numberOfPlatformsOnScreen;
-    public Transform player;
-
+    
+    private Transform player;
     private float xSpawnLocation;
 
     private void Start()
@@ -17,6 +17,8 @@ public class BossPlatforms : MonoBehaviour
             if (i == 0) SpawnFirstPlatform();
             SpawnTile();
         }
+
+        player = GameObject.Find("Player").transform;
     }
 
     private void Update()

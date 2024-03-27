@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private bool grounded;
     private bool jumped;
-    private Animator animator;
     private AudioSource source;
     private int hp;
     private TextMeshProUGUI coinsText;
@@ -25,12 +24,15 @@ public class PlayerMovement : MonoBehaviour
     public int coins;
     public AudioClip healClip;
     public bool canMove = true;
+    public GameOverMenuController gameOverMenuController;
+    public Animator blackPanelAnimator;
+    public AudioSource musicSource;
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
         source = GetComponent<AudioSource>();
         hp = hearts.Length;
         DontDestroyOnLoad(gameObject);
@@ -132,24 +134,28 @@ public class PlayerMovement : MonoBehaviour
 
             canMove = false;
             animator.SetBool("Dead", true);
+            gameOverMenuController.PlayerDied();
         }
     }
 
     public void HealPlayer(int heal)
     {
-        hp += heal;
-        source.PlayOneShot(healClip);
-
-        if(hp == 2)
+        if(hp < 3)
         {
-            hearts[1].GetComponent<MeshRenderer>().material = fullHeartMat;
-            hearts[1].GetComponent<Animator>().SetTrigger("Spin");
-        }
+            hp += heal;
+            source.PlayOneShot(healClip);
 
-        if (hp == 3)
-        {
-            hearts[2].GetComponent<MeshRenderer>().material = fullHeartMat;
-            hearts[2].GetComponent<Animator>().SetTrigger("Spin");
+            if (hp == 2)
+            {
+                hearts[1].GetComponent<MeshRenderer>().material = fullHeartMat;
+                hearts[1].GetComponent<Animator>().SetTrigger("Spin");
+            }
+
+            if (hp == 3)
+            {
+                hearts[2].GetComponent<MeshRenderer>().material = fullHeartMat;
+                hearts[2].GetComponent<Animator>().SetTrigger("Spin");
+            }
         }
     }
 

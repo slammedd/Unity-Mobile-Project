@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class MainMenuController : MonoBehaviour
 {
     public string level1SceneName;
+
+    private bool restarted;
+
     public void QuitGame()
     {
         Application.Quit();

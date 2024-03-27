@@ -7,12 +7,14 @@ public class BossMissile : MonoBehaviour
     public ParticleSystem explosionParticleSystem;
     public float moveSpeed;
     public float missileLifetime;
+    public AudioClip spinClip;
 
     private Vector3 target;
     private Transform player;
     private bool canDamage = true;
     private bool shotBack;
     private Transform boss;
+    private AudioSource source;
 
     private void Start()
     {
@@ -20,6 +22,7 @@ public class BossMissile : MonoBehaviour
         transform.up = (player.transform.position - transform.position);
         boss = FindObjectOfType<Boss>().transform;
         Invoke("DestroyMissile", missileLifetime);
+        source = GetComponent<AudioSource>();
     }
 
 
@@ -54,6 +57,7 @@ public class BossMissile : MonoBehaviour
             target = boss.position;
             transform.Rotate(0, 180, 0);
             moveSpeed = moveSpeed * 4;
+            source.PlayOneShot(spinClip);
         }
     }
 
