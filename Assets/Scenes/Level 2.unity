@@ -1825,6 +1825,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower
       objectReference: {fileID: 0}
+    - target: {fileID: 3251697632029402207, guid: 4afcfee3fa3696a49bb31c9718835c74,
+        type: 3}
+      propertyPath: nextLevelName
+      value: Boss Level
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4afcfee3fa3696a49bb31c9718835c74, type: 3}
 --- !u!4 &145834428 stripped

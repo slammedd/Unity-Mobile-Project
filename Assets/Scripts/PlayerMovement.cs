@@ -68,6 +68,9 @@ public class PlayerMovement : MonoBehaviour
         }
 
         coinsText.text = coins.ToString();
+
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
     }
 
     private void FixedUpdate()
