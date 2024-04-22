@@ -10,6 +10,8 @@ public class LevelEndTower : MonoBehaviour
     public string nextLevelName;
 
     private BlackPanelControl blackPanel;
+    private GameObject player;
+    private PlayerMovement playerMovement;
 
     private void Start()
     {
@@ -20,10 +22,12 @@ public class LevelEndTower : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerMovement>().canMove = false;
-            other.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            other.GetComponent<Animator>().SetTrigger("Wave");
-            other.transform.position = endPoint.position;
+            player = other.gameObject;
+            playerMovement = player.GetComponent<PlayerMovement>();
+            playerMovement.canMove = false;
+            player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            player.GetComponent<Animator>().SetTrigger("Wave");
+            player.transform.position = endPoint.position;
             Invoke("LowerBlackPanel", 1.5f);
             Invoke("LoadNextLevel", 3);
         }
@@ -31,6 +35,9 @@ public class LevelEndTower : MonoBehaviour
 
     private void LoadNextLevel()
     {
+        player.transform.position = new Vector3(3, 1.5f, 0);
+        playerMovement.canMove = true;
+        player.GetComponent<Animator>().SetTrigger("Reset Animations");
         SceneManager.LoadScene(nextLevelName);
     }
 

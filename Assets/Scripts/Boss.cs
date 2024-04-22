@@ -46,6 +46,8 @@ public class Boss : MonoBehaviour
         {
             canShoot = false;
             animator.SetTrigger("Dead");
+            player.canMove = false;
+            player.GetComponent<Rigidbody>().velocity = Vector3.zero;
             player.animator.SetTrigger("Wave");
             gameOverMenuController.PlayerWon();
         }
