@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class GameOverMenuController : MonoBehaviour
 {
-    public TextMeshProUGUI finalCoinsText;
     public TextMeshProUGUI coinsText;
     public GameObject displayCoin;
     public GameObject youWon;
@@ -16,16 +15,17 @@ public class GameOverMenuController : MonoBehaviour
     public string mainMenuSceneName;
 
     private PlayerMovement player;
+    private CoinManager coinManager;
 
     private void Start()
     {
         player = FindObjectOfType<PlayerMovement>();
+        coinManager = FindObjectOfType<CoinManager>();
         DontDestroyOnLoad(gameObject);
     }
 
     public void PlayerDied()
     {
-        finalCoinsText.text = ("You collected " + player.coins + " coins!");
         coinsText.gameObject.SetActive(false);
         displayCoin.SetActive(false);
         youDied.SetActive(true);
@@ -33,8 +33,7 @@ public class GameOverMenuController : MonoBehaviour
     }
 
     public void PlayerWon()
-    {
-        finalCoinsText.text = ("You collected " + player.coins + " coins!");
+        {
         coinsText.gameObject.SetActive(false);
         displayCoin.SetActive(false);
         youWon.SetActive(true);
@@ -42,7 +41,7 @@ public class GameOverMenuController : MonoBehaviour
         player.canMove = false;
     }
 
-    public void RestartGame()
+    public void MainMenu()
     {
         Destroy(player.gameObject);             
         SceneManager.LoadScene(mainMenuSceneName);

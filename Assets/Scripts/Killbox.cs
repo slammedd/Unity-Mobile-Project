@@ -11,7 +11,8 @@ public class Killbox : MonoBehaviour
         if (other.CompareTag("Player") && canDamage)
         {
             canDamage = false;
-            other.GetComponent<PlayerMovement>().DamagePlayer(3);
+            other.GetComponent<PlayerMovement>().KillboxDamagePlayer(3);
+            other.GetComponent<PlayerMovement>().shield.SetActive(false);
         }
     }
 }

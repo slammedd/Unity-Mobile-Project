@@ -10,7 +10,10 @@ public class PlayerMovement : MonoBehaviour
     private bool jumped;
     private AudioSource source;
     private int hp;
-    private TextMeshProUGUI coinsText;
+    private PlayerUpgradeManager upgradeManager;
+    private bool ShieldUnlocked;
+    private bool ShieldUsed;
+    private bool highJumpUnlocked;
 
     public float autoMoveSpeed;
     public float jumpForce;
@@ -21,22 +24,25 @@ public class PlayerMovement : MonoBehaviour
     public Material fullHeartMat;
     public Material emptyHeartMat;
     public AudioClip damageClip;
-    public int coins;
     public AudioClip healClip;
     public bool canMove = true;
     public GameOverMenuController gameOverMenuController;
     public Animator blackPanelAnimator;
     public AudioSource musicSource;
     public Animator animator;
+    public Material playerColourMaterial;
+    public GameObject shield;
+    public ParticleSystem shieldParticleSystem;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         source = GetComponent<AudioSource>();
+        upgradeManager = FindObjectOfType<PlayerUpgradeManager>();
         hp = hearts.Length;
         DontDestroyOnLoad(gameObject);
-        AssignCoinText();
+        SetPlayerUpgrades();
     }
 
     // Update is called once per frame
@@ -64,13 +70,6 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("Moving", true);
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            DamagePlayer(1);
-        }
-
-        coinsText.text = coins.ToString();
-
         transform.rotation = Quaternion.Euler(0, 0, 0);
         transform.position = new Vector3(transform.position.x, transform.position.y, 0);
     }
@@ -84,9 +83,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //apply jump force and trigger animation
-        if (jumped)
+        if (jumped && !highJumpUnlocked)
         {
             Jump(jumpForce);
+        }
+
+        else if(jumped && highJumpUnlocked)
+        {
+            Jump(jumpForce * 1.5f);
         }
 
         if (Input.GetKeyDown(KeyCode.P))
@@ -105,11 +109,56 @@ public class PlayerMovement : MonoBehaviour
 
     public void DamagePlayer(int damage)
     {
+        if(ShieldUnlocked && !ShieldUsed)
+        {
+            Instantiate(shieldParticleSystem, transform.position, Quaternion.identity);
+            shield.SetActive(false);
+            ShieldUsed = true;
+        }
+
+        else
+        {
+            hp -= damage;
+            source.PlayOneShot(damageClip);
+            animator.SetTrigger("Damage");
+
+            if (hp == 2)
+            {
+                hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
+                hearts[2].GetComponent<Animator>().SetTrigger("Spin");
+                hearts[1].GetComponent<MeshRenderer>().material = fullHeartMat;
+                hearts[0].GetComponent<MeshRenderer>().material = fullHeartMat;
+            }
+
+            else if (hp == 1)
+            {
+                hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
+                hearts[1].GetComponent<MeshRenderer>().material = emptyHeartMat;
+                hearts[1].GetComponent<Animator>().SetTrigger("Spin");
+                hearts[0].GetComponent<MeshRenderer>().material = fullHeartMat;
+            }
+
+            else if (hp <= 0)
+            {
+                hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
+                hearts[1].GetComponent<MeshRenderer>().material = emptyHeartMat;
+                hearts[0].GetComponent<MeshRenderer>().material = emptyHeartMat;
+                hearts[0].GetComponent<Animator>().SetTrigger("Spin");
+
+                canMove = false;
+                animator.SetBool("Dead", true);
+                gameOverMenuController.PlayerDied();
+            }
+        }
+    }
+
+    public void KillboxDamagePlayer(int damage)
+    {
         hp -= damage;
         source.PlayOneShot(damageClip);
         animator.SetTrigger("Damage");
-        
-        if(hp == 2)
+
+        if (hp == 2)
         {
             hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
             hearts[2].GetComponent<Animator>().SetTrigger("Spin");
@@ -117,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
             hearts[0].GetComponent<MeshRenderer>().material = fullHeartMat;
         }
 
-        else if(hp == 1)
+        else if (hp == 1)
         {
             hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
             hearts[1].GetComponent<MeshRenderer>().material = emptyHeartMat;
@@ -125,7 +174,7 @@ public class PlayerMovement : MonoBehaviour
             hearts[0].GetComponent<MeshRenderer>().material = fullHeartMat;
         }
 
-        else if(hp <= 0)
+        else if (hp <= 0)
         {
             hearts[2].GetComponent<MeshRenderer>().material = emptyHeartMat;
             hearts[1].GetComponent<MeshRenderer>().material = emptyHeartMat;
@@ -159,8 +208,43 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void AssignCoinText()
+    private void SetPlayerUpgrades()
     {
-        coinsText = GameObject.Find("Coins Text").GetComponent<TextMeshProUGUI>();
+        if(upgradeManager.equippedSkin == 1)
+        {
+            playerColourMaterial.SetColor("_Color", Color.red);
+        }
+
+        else if(upgradeManager.equippedSkin == 2)
+        {
+            playerColourMaterial.SetColor("_Color", Color.blue);
+        }
+
+        else if(upgradeManager.equippedSkin == 3)
+        {
+            playerColourMaterial.SetColor("_Color", Color.green);
+        }
+
+        if (upgradeManager.shieldUnlocked)
+        {
+            shield.SetActive(true);
+            ShieldUnlocked = true;
+        }
+
+        else
+        {
+            shield.SetActive(false);
+            ShieldUnlocked = false;
+        }
+
+        if (upgradeManager.highJumpUnlocked)
+        {
+            highJumpUnlocked = true;
+        }
+        
+        else
+        {
+            highJumpUnlocked = false;
+        }
     }
 }

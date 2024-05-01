@@ -11,7 +11,6 @@ public class PlayerStart : MonoBehaviour
         player = FindObjectOfType<PlayerMovement>();
 
         player.transform.position = transform.position;
-        player.AssignCoinText();
         player.GetComponent<Animator>().SetTrigger("Reset Animations");
         player.canMove = true;
     }

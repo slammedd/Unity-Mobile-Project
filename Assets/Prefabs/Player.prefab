@@ -236,10 +236,12 @@ MonoBehaviour:
   fullHeartMat: {fileID: 2100000, guid: 1f0b02b6e8d8b764d9d8c981f7f4f4f3, type: 2}
   emptyHeartMat: {fileID: 2100000, guid: 09366ec37255f804287fcddf01389e2a, type: 2}
   damageClip: {fileID: 8300000, guid: bc54e451c3f92914a8bc9f21a85a683a, type: 3}
-  coinsText: {fileID: 0}
-  coins: 0
   healClip: {fileID: 8300000, guid: 28aa47014764c7c4587f7cae88d02c0d, type: 3}
   canMove: 1
+  gameOverMenuController: {fileID: 0}
+  blackPanelAnimator: {fileID: 0}
+  musicSource: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!95 &6297723320732318329
 Animator:
   serializedVersion: 3

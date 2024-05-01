@@ -6,12 +6,18 @@ public class CoinScript : MonoBehaviour
 {
 
     public ParticleSystem coinParticleSystem;
+    private CoinManager coinManager;
+
+    private void Start()
+    {
+        coinManager = FindObjectOfType<CoinManager>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerMovement>().coins++;
+            coinManager.coins++;
             Instantiate(coinParticleSystem, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
